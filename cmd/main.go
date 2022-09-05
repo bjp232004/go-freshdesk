@@ -46,15 +46,21 @@ func main(){
 		log.Fatalf("failed to create ticket: %s", err)
 	}
 
-	res2B, _ := json.Marshal(resp)
-
-	var objmap []map[string]interface{}
-	if err = json.Unmarshal(res2B, &objmap); err != nil {
-		log.Fatal(err)
-	}
-	
-	for _, value := range objmap {
-		fmt.Print(value["id"],value["subject"])
+	for _, value := range resp {
+		fmt.Print(value.ID,value.Subject)
 		fmt.Print("\n")
 	}
+
+	// res2B, _ := json.Marshal(resp)
+	// fmt.Print(resp)
+
+	// var objmap []map[string]interface{}
+	// if err = json.Unmarshal(res2B, &objmap); err != nil {
+	// 	log.Fatal(err)
+	// }
+	
+	// for _, value := range objmap {
+	// 	fmt.Print(value["id"],value["subject"])
+	// 	fmt.Print("\n")
+	// }
 }
