@@ -1,6 +1,7 @@
 package freshdesk
 
 import (
+	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
@@ -30,7 +31,18 @@ func (c *Client) Tickets() *TicketsClient {
 }
 
 func (c *Client) newRequest(method, endpoint string, body interface{}) (*http.Request, error) {
-	req, err := http.NewRequest(method, c.baseURL+endpoint, nil)
+	var bodyReader *bytes.Reader
+
+	// if body != nil {
+		
+		b, err := json.Marshal(&body)
+		if err != nil {
+			return nil, err
+		}
+		bodyReader = bytes.NewReader(b)
+	// }
+
+	req, err := http.NewRequest(method, c.baseURL+endpoint, bodyReader)
 	if err != nil {
 		return nil, err
 	}
