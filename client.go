@@ -8,7 +8,7 @@ import (
 	"net/http"
 	"time"
 
-	"github.com/hashicorp/go-retryablehttp"
+	// "github.com/hashicorp/go-retryablehttp"
 )
 
 type Client struct {
