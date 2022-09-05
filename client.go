@@ -21,7 +21,6 @@ func NewClient(subdomain, apiKey string) (*Client, error) {
 	return &Client{
 		apiKey:     apiKey,
 		baseURL:    fmt.Sprintf("https://%s.freshdesk.com/api/v2/", subdomain),
-		httpClient: retryablehttp.NewClient().StandardClient(),
 	}, nil
 }
 
