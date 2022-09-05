@@ -6,6 +6,7 @@ import (
 	"errors"
 	"fmt"
 	"net/http"
+	"time"
 
 	"github.com/hashicorp/go-retryablehttp"
 )
@@ -15,7 +16,7 @@ type Client struct {
 	apiKey    string
 	baseURL   string
 
-	httpClient *http.Client
+	httpClient *http.Client{Timeout: time.Duration(1) * time.Second}
 }
 
 func NewClient(subdomain, apiKey string) (*Client, error) {
