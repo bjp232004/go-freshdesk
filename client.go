@@ -54,8 +54,8 @@ func (c *Client) newRequest(method, endpoint string, body interface{}) (*http.Re
 }
 
 func (c *Client) do(req *http.Request, out interface{}) error {
-	c := http.Client{Timeout: time.Duration(1) * time.Second}
-	res, err := c.Do(req)
+	cdo := c.httpClient{Timeout: time.Duration(1) * time.Second}
+	res, err := cdo.Do(req)
 	if err != nil {
 		return err
 	}
