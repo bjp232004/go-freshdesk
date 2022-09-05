@@ -16,7 +16,7 @@ type Client struct {
 	apiKey    string
 	baseURL   string
 
-	httpClient *http.Client
+	httpClient *http.Client{}
 }
 
 func NewClient(subdomain, apiKey string) (*Client, error) {
