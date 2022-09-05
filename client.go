@@ -16,7 +16,7 @@ type Client struct {
 	apiKey    string
 	baseURL   string
 
-	httpClient *http.Client{Timeout: time.Duration(1) * time.Second}
+	httpClient *http.Client
 }
 
 func NewClient(subdomain, apiKey string) (*Client, error) {
@@ -54,7 +54,8 @@ func (c *Client) newRequest(method, endpoint string, body interface{}) (*http.Re
 }
 
 func (c *Client) do(req *http.Request, out interface{}) error {
-	res, err := c.httpClient.Do(req)
+	c := http.Client{Timeout: time.Duration(1) * time.Second}
+	res, err := c.Do(req)
 	if err != nil {
 		return err
 	}
