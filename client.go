@@ -1,26 +1,27 @@
 package freshdesk
 
 import (
-	"bytes"
 	"encoding/json"
 	"errors"
 	"fmt"
 	"net/http"
-	"time"
 
-	// "github.com/hashicorp/go-retryablehttp"
+	"github.com/hashicorp/go-retryablehttp"
 )
 
 type Client struct {
 	subdomain string
 	apiKey    string
 	baseURL   string
+
+	httpClient *http.Client
 }
 
 func NewClient(subdomain, apiKey string) (*Client, error) {
 	return &Client{
 		apiKey:     apiKey,
 		baseURL:    fmt.Sprintf("https://%s.freshdesk.com/api/v2/", subdomain),
+		httpClient: retryablehttp.NewClient().StandardClient(),
 	}, nil
 }
 
@@ -29,17 +30,7 @@ func (c *Client) Tickets() *TicketsClient {
 }
 
 func (c *Client) newRequest(method, endpoint string, body interface{}) (*http.Request, error) {
-	var bodyReader *bytes.Reader
-
-	if body != nil {
-		b, err := json.Marshal(&body)
-		if err != nil {
-			return nil, err
-		}
-		bodyReader = bytes.NewReader(b)
-	}
-
-	req, err := http.NewRequest(method, c.baseURL+endpoint, bodyReader)
+	req, err := http.NewRequest(method, c.baseURL+endpoint, nil)
 	if err != nil {
 		return nil, err
 	}
@@ -51,8 +42,7 @@ func (c *Client) newRequest(method, endpoint string, body interface{}) (*http.Re
 }
 
 func (c *Client) do(req *http.Request, out interface{}) error {
-	cdo := http.Client{Timeout: time.Duration(1) * time.Second}
-	res, err := cdo.Do(req)
+	res, err := c.httpClient.Do(req)
 	if err != nil {
 		return err
 	}
