@@ -1,4 +1,4 @@
-package freshdesk
+package handlers
 
 import (
 	"bytes"
@@ -18,7 +18,7 @@ type Client struct {
 	httpClient *http.Client
 }
 
-func NewClient(subdomain, apiKey string) (*Client, error) {
+func FreshDeskClient(subdomain, apiKey string) (*Client, error) {
 	return &Client{
 		apiKey:     apiKey,
 		baseURL:    fmt.Sprintf("https://%s.freshdesk.com/api/v2/", subdomain),
@@ -30,16 +30,16 @@ func (c *Client) Tickets() *TicketsClient {
 	return &TicketsClient{c}
 }
 
-func (c *Client) newRequest(method, endpoint string, body interface{}) (*http.Request, error) {
+func (c *Client) freshDeskRequest(method, endpoint string, body interface{}) (*http.Request, error) {
 	var bodyReader *bytes.Reader
 
 	// if body != nil {
-		
-		b, err := json.Marshal(&body)
-		if err != nil {
-			return nil, err
-		}
-		bodyReader = bytes.NewReader(b)
+
+	b, err := json.Marshal(&body)
+	if err != nil {
+		return nil, err
+	}
+	bodyReader = bytes.NewReader(b)
 	// }
 
 	req, err := http.NewRequest(method, c.baseURL+endpoint, bodyReader)
